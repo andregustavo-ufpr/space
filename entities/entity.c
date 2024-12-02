@@ -18,7 +18,7 @@ entity *createEntity(collisionBox *box, int health){
 
 void deleteEntity(entity *ent){
     if(ent == NULL){
-        return NULL;
+        return;
     }
 
     free(ent);

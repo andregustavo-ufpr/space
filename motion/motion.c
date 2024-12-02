@@ -61,8 +61,19 @@ void addVelocity(int vel, position *coord, int axis){
 }
 
 void updatePos(position *coord){
-    coord->x = coord->x + coord->vel_x;
-    coord->y = coord->y + coord->vel_y;
+    int next_x_pos = coord->x + coord->vel_x;
+    int next_y_pos = coord->y + coord->vel_y;
+
+    if(next_x_pos < 0 || next_x_pos > X_SCREEN){ //TODO: Block Rigth side
+        next_x_pos = coord->x;
+    }
+
+    if(next_y_pos < 0 || next_y_pos > (Y_SCREEN )){ // TODO: Block left side
+        next_y_pos = coord->y;
+    }
+
+    coord->x = next_x_pos;
+    coord->y = next_y_pos;
 }
 
 int checkCollision(collisionBox *box1, collisionBox *box2){
