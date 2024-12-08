@@ -3,12 +3,13 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #define X_AXIS 1
 #define Y_AXIS 2
 
-#define X_SCREEN 1600
-#define Y_SCREEN 900
+#define X_SCREEN 1280
+#define Y_SCREEN 720
 
 typedef struct position {
     int x;
@@ -32,7 +33,7 @@ void addVelocity(int vel, position * coord, int axis);
 // Update the position according with the velocities
 void updatePos(position *coord);
 
-int checkCollision(collisionBox *box1, collisionBox *box2);
+bool checkCollision(collisionBox *box1, collisionBox *box2);
 
 position *createPosition(int x, int y);
 

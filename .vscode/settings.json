@@ -3,6 +3,8 @@
         "string.h": "c",
         "stdio.h": "c",
         "events.h": "c",
-        "attack.h": "c"
+        "attack.h": "c",
+        "alien.h": "c",
+        "motion.h": "c"
     }
 }

@@ -4,18 +4,16 @@
 #include "motion.h"
 #include <allegro5/bitmap.h>
 
-#define MAIN_PLAYER 1
-#define ENEMY 2
-#define COLLECTABLE 3
-
 typedef struct entity {
     collisionBox *box;
     int health;
     ALLEGRO_BITMAP *sprite;
-    int type;
+    short int attack_type;
+    short int attack_timer;
+    bool used;
 } entity;
 
-entity *createEntity(collisionBox *box, int health);
+entity *createEntity(collisionBox *box, int health, short int attack_type);
 
 void deleteEntity(entity *ent);
 

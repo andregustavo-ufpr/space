@@ -64,11 +64,11 @@ void updatePos(position *coord){
     int next_x_pos = coord->x + coord->vel_x;
     int next_y_pos = coord->y + coord->vel_y;
 
-    if(next_x_pos < 0 || next_x_pos > X_SCREEN){ //TODO: Block Rigth side
+    if(next_x_pos < 0 || next_x_pos > X_SCREEN){ 
         next_x_pos = coord->x;
     }
 
-    if(next_y_pos < 0 || next_y_pos > (Y_SCREEN )){ // TODO: Block left side
+    if(next_y_pos < 0 || next_y_pos > (Y_SCREEN )){
         next_y_pos = coord->y;
     }
 
@@ -76,21 +76,12 @@ void updatePos(position *coord){
     coord->y = next_y_pos;
 }
 
-int checkCollision(collisionBox *box1, collisionBox *box2){
-    int overlap = 0;
-
-    int boundaryX = box2->coord->x + box2->width;
-    int boundaryY = box2->coord->y + box2->height;
-
-
-    while(overlap != 1){
-        if(box1->coord->x > box2->coord->x && box1->coord->x < boundaryX){
-            overlap = 1;
-        }
-        if(box1->coord->y < box2->coord->y && box1->coord->y > boundaryY ){
-            overlap = 1;
-        }
-    }
+bool checkCollision(collisionBox *box1, collisionBox *box2){
     
-    return overlap;
+    if(box1->coord->x > (box2->coord->x + box2->width)) return false;
+    if((box1->coord->x + box1->width) < box2->coord->x) return false;
+    if(box1->coord->y < (box2->coord->y - box2->height)) return false;
+    if((box1->coord->y - box1->height) > box2->coord->y) return false;
+
+    return true;
 }

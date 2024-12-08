@@ -1,6 +1,7 @@
 #include "entity.h"
 
-entity *createEntity(collisionBox *box, int health){
+
+entity *createEntity(collisionBox *box, int health, short int attack_type){
     entity *ent;
 
     ent = malloc(sizeof(entity));
@@ -12,6 +13,7 @@ entity *createEntity(collisionBox *box, int health){
 
     ent->box = box;
     ent->health = health;
+    ent->attack_type = attack_type;
 
     return ent;
 }

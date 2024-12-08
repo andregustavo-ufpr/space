@@ -5,7 +5,8 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/motion",
-                "${workspaceFolder}"
+                "${workspaceFolder}",
+                "${workspaceFolder}/entities"
             ],
             "defines": [
                 "_DEBUG",
