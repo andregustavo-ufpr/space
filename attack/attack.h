@@ -13,8 +13,7 @@ typedef enum attacker {
 typedef struct attack {
     collisionBox *box;                                                          // Position and speed information
     int damage;                                                                 // How many HP this removes
-    int expire_time;                                                            // Time in ticks that it stays active
-    ALLEGRO_BITMAP *sprite;                                                     // Bitmap to represent attack
+    int expire_time;                                                             // Bitmap to represent attack
     bool used;
     attacker owner;
 } attack;

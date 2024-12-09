@@ -19,7 +19,7 @@
 
 #define MOVEMENT_SPEED 5
 #define EXPIRATION 50
-#define MAIN_PLAYER_HEALTH 100
+#define MAIN_PLAYER_HEALTH 40
 #define MAIN_PLAYER_DAMAGE 20
 #define BASE_ATTACK_SPEED 20
 #define MAX_ATTACKS 120
@@ -350,7 +350,7 @@ void createAlien(alien *enemy){
     enemy->shot_timer = between(1, 99);
     enemy->used = true;
 
-    if(!can_spawn_powerup || main_player->attack_type == SHOTGUN){
+    if((!can_spawn_powerup || main_player->attack_type == SHOTGUN) && enemy->type == COLLECTABLE){
         enemy->type = ALIEN_TYPE_ARROW;
     }
 
@@ -379,7 +379,7 @@ void alienAttack(alien attacker){
 
         collisionBox *attack_box = createBox(attacker.box->coord->x + attacker.box->width, attacker.box->coord->y, 20, 20);
         
-        addVelocity(-BASE_ATTACK_SPEED, attack_box->coord, X_AXIS);
+        addVelocity(-15, attack_box->coord, X_AXIS);
 
         for(int i = 0; i < MAX_ATTACKS; i++){
         
@@ -537,6 +537,26 @@ void checkPlayerColision(){
     }
 }
 
+int destroyAttacks(){
+    for(int i = 0; i < MAX_ATTACKS; i ++){
+        if(attack_list[i].box != NULL){
+            destroyBox(attack_list[i].box);
+        }
+    }
+
+    return 1;
+}
+
+int destroyAliens(){
+    for(int i = 0; i < MAX_ATTACKS; i ++){
+        if(enemies[i].box != NULL){
+            destroyBox(attack_list[i].box);
+        }
+    }
+
+    return 1;
+}
+
 int main() {
 
     // Initializers
@@ -577,7 +597,8 @@ int main() {
     initAttacks();
     initAliens(enemies);
 
-    phase = 2;
+    phase = 1;
+    int wait_time = 0;
 
     while (running == 1){
         
@@ -617,6 +638,39 @@ int main() {
                     }
                     break;
                 case ALLEGRO_EVENT_TIMER:
+                    if(wait_time > 0){
+                        wait_time--;
+                        
+                        if(phase == 2){
+                            al_draw_textf(
+                                font,
+                                al_map_rgb(255,255,255),
+                                X_SCREEN/2, Y_SCREEN/2,
+                                0,
+                                "PHASE 2"
+                            );
+                        }
+                        else{
+                            al_draw_textf(
+                                font,
+                                al_map_rgb(255,255,255),
+                                X_SCREEN/2, Y_SCREEN/2,
+                                0,
+                                "Y O U  W I N"
+                            );
+
+                            al_draw_textf(
+                                font,
+                                al_map_rgb(255,255,255),
+                                X_SCREEN/2, (Y_SCREEN/2 + 50),
+                                0,
+                                "Score: %ld",
+                                score
+                            );
+                        }
+
+                        continue;
+                    }
                     // spawnEnemies();
                     al_clear_to_color(al_map_rgb(0, 0, 0));
                     
@@ -629,8 +683,6 @@ int main() {
                     drawHUD();
 
                     checkPlayerColision();
-                    
-                    al_flip_display();
                     event_timer += 1;
 
                     if(phase == 1){
@@ -639,6 +691,7 @@ int main() {
                             enemies_killed = 0;
                             enemies_spawned = 0;
                             score = 0;
+                            score_display = 0;
                             
                             for(int i=0; i< MAX_ALIENS; i++){
                                 enemies[i].used = false;
@@ -655,18 +708,45 @@ int main() {
                                 0,
                                 "PHASE 2"
                             );
+
+                            wait_time = 60;
                         }
                     }
                     if(phase == 2){
-                        // if(enemies_killed > 20){
-                        //     // phase = 2;
-                        //     enemies_killed = 0;
-                        //     for(int i = 0; i < MAX_ALIENS; i++){
-                        //         free(enemies_list[i]);
-                        //     }
-                        //     // Menu ending
-                        // }
+                        if(score > 4000){
+                            enemies_killed = 0;
+                            enemies_spawned = 0;
+                            
+                            for(int i=0; i< MAX_ALIENS; i++){
+                                enemies[i].used = false;
+                            }
+
+                            for(int i=0; i< MAX_ATTACKS; i++){
+                                attack_list[i].used = false;
+                            }
+
+                            al_draw_textf(
+                                font,
+                                al_map_rgb(255,255,255),
+                                X_SCREEN/2, Y_SCREEN/2,
+                                0,
+                                "Y O U  W I N"
+                            );
+
+                            al_draw_textf(
+                                font,
+                                al_map_rgb(255,255,255),
+                                X_SCREEN/2, (Y_SCREEN/2 + 50),
+                                0,
+                                "Score: %ld",
+                                score
+                            );
+
+                            wait_time = 300;
+                        }
                     }
+
+                    al_flip_display();
 
                     break;
                 default:
@@ -683,6 +763,8 @@ int main() {
 
     end_game(timer, disp, queue);
     destroyHUD();
+    destroyAliens();
+    destroyAttacks();
 
     return 0;
 }
