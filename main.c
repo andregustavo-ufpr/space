@@ -640,7 +640,16 @@ int main() {
                 case ALLEGRO_EVENT_TIMER:
                     if(wait_time > 0){
                         wait_time--;
-                        
+
+                        if(phase == 0){
+                            al_draw_text(
+                                font,
+                                al_map_rgb_f(1,1,1),
+                                X_SCREEN / 2, Y_SCREEN / 2,
+                                ALLEGRO_ALIGN_CENTER,
+                                "G A M E  O V E R"
+                            );
+                        }
                         if(phase == 2){
                             al_draw_textf(
                                 font,
@@ -668,7 +677,7 @@ int main() {
                                 score
                             );
                         }
-
+                        al_flip_display();
                         continue;
                     }
                     // spawnEnemies();
@@ -701,21 +710,15 @@ int main() {
                                 attack_list[i].used = false;
                             }
 
-                            al_draw_textf(
-                                font,
-                                al_map_rgb(255,255,255),
-                                X_SCREEN/2, Y_SCREEN/2,
-                                0,
-                                "PHASE 2"
-                            );
-
                             wait_time = 60;
+                            continue;
                         }
                     }
                     if(phase == 2){
                         if(score > 4000){
                             enemies_killed = 0;
                             enemies_spawned = 0;
+                            phase = 3;
                             
                             for(int i=0; i< MAX_ALIENS; i++){
                                 enemies[i].used = false;
@@ -725,25 +728,17 @@ int main() {
                                 attack_list[i].used = false;
                             }
 
-                            al_draw_textf(
-                                font,
-                                al_map_rgb(255,255,255),
-                                X_SCREEN/2, Y_SCREEN/2,
-                                0,
-                                "Y O U  W I N"
-                            );
-
-                            al_draw_textf(
-                                font,
-                                al_map_rgb(255,255,255),
-                                X_SCREEN/2, (Y_SCREEN/2 + 50),
-                                0,
-                                "Score: %ld",
-                                score
-                            );
-
                             wait_time = 300;
+                            continue;
                         }
+                    }
+                    if(phase == 3){
+                        running = 0;
+                    }
+
+                    if(main_player->health <= 0){
+                        wait_time = 300;
+                        phase = 0;
                     }
 
                     al_flip_display();
